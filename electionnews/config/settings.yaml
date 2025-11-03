@@ -1,0 +1,11 @@
+candidates:
+  - Trump
+  - Harris
+period:
+  start: "2025-09-30"
+  end: "2025-11-02"
+feeds:
+  - https://finance.yahoo.com/rss/topstories
+  - https://www.cnbc.com/id/100003114/device/rss/rss.html
+  - https://feeds.marketwatch.com/marketwatch/topstories/
+  - https://www.bloomberg.com/feed/podcast/etf-report.xml

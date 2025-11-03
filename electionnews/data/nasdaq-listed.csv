@@ -1,0 +1,11 @@
+Symbol,Security Name,Market Category,Test Issue,Financial Status,Round Lot Size
+AAPL,Apple Inc.,Q,N,N,100
+MSFT,Microsoft Corporation,Q,N,N,100
+AMZN,Amazon.com Inc.,Q,N,N,100
+GOOGL,Alphabet Inc. Class A,Q,N,N,100
+META,Meta Platforms Inc. Class A,Q,N,N,100
+TSLA,Tesla Inc.,Q,N,N,100
+NFLX,Netflix Inc.,Q,N,N,100
+NVDA,NVIDIA Corporation,Q,N,N,100
+ADBE,Adobe Inc.,Q,N,N,100
+INTC,Intel Corporation,Q,N,N,100
