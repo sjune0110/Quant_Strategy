@@ -1,0 +1,10 @@
+pe-env*/
+pe-env-312*/
+__pycache__/
+*.py[cod]
+.DS_Store
+.ipynb_checkpoints/
+
+# Generated outputs
+electionnews/data/raw_articles.csv
+electionnews/data/summary.csv

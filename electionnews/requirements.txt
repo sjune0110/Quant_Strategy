@@ -1,0 +1,5 @@
+pandas
+PyYAML
+requests
+transformers
+torch

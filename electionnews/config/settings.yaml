@@ -1,0 +1,15 @@
+candidates:
+  - Trump
+  - Biden
+  - Democrat
+  - Republican
+
+doc_api:
+  timespan: "1d"          # or use date_range / startdatetime+enddatetime instead
+  date_range: "01-Oct-2024 - 01-Nov-2024"  # UI format
+  maxrecords: 5       # up to 250 per query
+  keywords:
+    - stock
+  source_lang: ENG        # e.g., "ENG" (GDELT language codes)
+  source_country: US    # e.g., "US" (two-letter country code)
+  domain_whitelist: []
