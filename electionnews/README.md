@@ -17,12 +17,18 @@ Pull election-related articles with the GDELT Doc API, find companies/tickers th
    python run.py
    ```
 
+## YAML config notes
+- All runtime settings are read from `config/settings.yaml`.
+- The Doc API request is built from the YAML fields under `doc_api` and the candidate list in `candidates`.
+
 ## What the pipeline does
+- Uses the GDELT Doc API for all article retrieval.
 - Doc API call per candidate × keyword bundle using `mode=ArtList` and `query="<candidate>" AND ("k1" OR "k2")` plus optional `site:domain`, `sourcelang`, `sourcecountry`, `timespan` or `startdatetime`/`enddatetime`. If `date_range` is set, it fans out daily queries to dodge Doc API date parsing quirks.
 - Fetch article bodies and strip HTML (`modules/crawler.fetch_article_text`).
 - Build company aliases from NASDAQ/NYSE listings (auto-downloaded from DataHub, refreshed daily) and loose-match them in the article text (`modules/parser.extract_tickers`).
 - Keep rows where a candidate and at least one ticker co-occur; ticker extraction stops at the first 3 hits to stay focused.
 - Summarize top 5 mentioned tickers per candidate (counts only—no sentiment scoring in this version).
+- Sentiment analysis is in progress and not part of the current output.
 
 ## Outputs
 - `data/raw_articles.csv` — candidate, title/summary snippet, matched sentence, tickers, link, published time.
