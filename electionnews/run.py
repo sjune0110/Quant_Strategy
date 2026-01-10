@@ -3,9 +3,10 @@ import pandas as pd
 import re
 from pathlib import Path
 from modules import crawler, parser
+from modules.utils import ensure_dir
 from datetime import datetime, timedelta
 
-# 1️⃣ 설정 로드
+# 1️⃣ Load config
 BASE_DIR = Path(__file__).resolve().parent
 config_path = BASE_DIR / "config" / "settings.yaml"
 cfg = yaml.safe_load(config_path.read_text())
@@ -28,7 +29,6 @@ enddt = None
 start_date_obj = None
 end_date_obj = None
 if date_range:
-    # expected format: "01-Sep-2024 - 03-Nov-2024"
     try:
         if " - " in date_range:
             start_str, end_str = [s.strip() for s in date_range.split(" - ", 1)]
@@ -79,10 +79,10 @@ if df.empty:
     print("[run] No articles collected; exiting.")
     raise SystemExit(0)
 
-# 3️⃣ 본문 크롤링
+# 3️⃣ Fetch article bodies
 df["body"] = df["link"].apply(crawler.fetch_article_text)
 
-# 4️⃣ 후보+티커가 같은 문장에 등장하는 경우만 카운트
+# 4️⃣ Count only sentences where candidate and ticker co-occur
 def _clean_sentence(sent: str) -> bool:
     if not isinstance(sent, str):
         return False
@@ -90,11 +90,11 @@ def _clean_sentence(sent: str) -> bool:
     if not s:
         return False
     lower = s.lower()
-    # 필터: 스크립트/boilerplate 흔적
+    # Filter out script/boilerplate traces
     blacklist = ["self.__next", "window.__", "push([", "{", "}"]
     if any(b in lower for b in blacklist):
         return False
-    # 알파벳 비중이 너무 낮은 경우 제외
+    # Skip sentences with very low alphabet ratio
     letters = sum(ch.isalpha() for ch in s)
     if letters == 0 or letters / max(len(s), 1) < 0.3:
         return False
@@ -129,27 +129,52 @@ if df_sent.empty:
     print("[run] No candidate-ticker sentences found; exiting.")
     raise SystemExit(0)
 
-# 5️⃣ 요약 (동시 언급 횟수 Top5)
+# 5️⃣ Summary 
 summary_rows = []
 for cand in df_sent["candidate"].unique():
     exploded = df_sent[df_sent["candidate"] == cand].explode("tickers")
     counts = exploded["tickers"].value_counts()
-    top5 = counts.head(5)
-    top_str = ", ".join([f"{k} ({v})" for k, v in top5.items()])
+    mentions_str = ", ".join([f"{k} ({v})" for k, v in counts.items()])
     summary_rows.append(
         {
             "candidate": cand,
-            "top5_mentions": top_str,
+            "mentions": mentions_str,
             "total_mentions": int(counts.sum()),
         }
     )
 summary = pd.DataFrame(summary_rows)
 
-# 6️⃣ 저장
+# 6️⃣ Save outputs
 raw_path = BASE_DIR / "data" / "raw_articles.csv"
 summary_path = BASE_DIR / "data" / "summary.csv"
+history_path = BASE_DIR / "data" / "data-summary.csv"
+ensure_dir(raw_path.parent)
 df_sent.to_csv(raw_path, index=False)
 summary.to_csv(summary_path, index=False)
+
+# 7️⃣ Append run history
+run_at = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+summary_history = summary.copy()
+summary_history["run_at_utc"] = run_at
+summary_history["date_range"] = date_range or ""
+summary_history["timespan"] = timespan or ""
+summary_history["keywords"] = ";".join(keywords)
+summary_history["domains"] = ";".join(domains)
+summary_history["source_lang"] = source_lang or ""
+summary_history["source_country"] = source_country or ""
+year_label = (start_date_obj or datetime.utcnow()).year
+if len(cands) >= 2:
+    cand_label = f"{cands[0]} vs {cands[1]}"
+else:
+    cand_label = ", ".join(cands)
+subtitle = f"{year_label} US election, {cand_label}, {date_range or timespan or ''}".strip().strip(", ")
+summary_history["subtitle"] = subtitle
+summary_history.to_csv(
+    history_path,
+    mode="a",
+    header=not history_path.exists(),
+    index=False,
+)
 
 print("\n✅ Analysis complete! Results saved to data/summary.csv")
 print(summary)

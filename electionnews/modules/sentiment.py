@@ -2,14 +2,14 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import pandas as pd
 
-# FinBERT 로드
+# Load FinBERT (not currently integrated into the main pipeline)
 tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
 model = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
 labels = ["positive", "neutral", "negative"]
 
 @torch.no_grad()
 def get_sentiment(text):
-    """단일 문장의 감성 분류"""
+    """Classify sentiment for a single sentence."""
     try:
         inputs = tokenizer(text, return_tensors="pt", truncation=True)
         outputs = model(**inputs)
@@ -19,7 +19,7 @@ def get_sentiment(text):
         return "neutral"
 
 def analyze_sentiment(df):
-    """DataFrame 전체 감성 분석"""
+    """Run sentiment analysis across the DataFrame."""
     sentiments = []
     for t in df["title"]:
         sentiments.append(get_sentiment(t))

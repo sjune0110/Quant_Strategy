@@ -18,8 +18,8 @@ def crawl_gdelt_docapi_keywords(
     enddatetime=None,
 ):
     """
-    후보 × 키워드 조합으로 Doc API(ArtList)를 호출해 기사 목록 수집.
-    keywords는 OR 묶음으로 포함.
+    Call the Doc API (ArtList) for each candidate × keyword combination and collect article listings.
+    Keywords are grouped with OR.
     """
     domains = domains or []
     keywords = [k for k in keywords if k]
@@ -96,7 +96,7 @@ def fetch_article_text(url: str) -> str:
     if not url:
         return ""
     try:
-        resp = requests.get(url, timeout=10)
+        resp = requests.get(url, timeout=2)
         resp.raise_for_status()
         text = resp.text
     except Exception:

@@ -2,19 +2,19 @@ import os
 from datetime import datetime
 
 def ensure_dir(path):
-    """폴더가 없으면 자동으로 생성"""
+    """Create the folder if it does not exist."""
     os.makedirs(path, exist_ok=True)
 
 def timestamp():
-    """현재 시간을 문자열로 반환 (로그용)"""
+    """Return current time as a string (for logs)."""
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 def log(msg):
-    """시간 표시 포함 간단한 로그 출력"""
+    """Print a simple log message with timestamp."""
     print(f"[{timestamp()}] {msg}")
 
 def save_dataframe(df, path):
-    """DataFrame을 CSV로 저장하고 로그 남김"""
+    """Save a DataFrame to CSV and log the result."""
     ensure_dir(os.path.dirname(path))
     df.to_csv(path, index=False)
     log(f"Saved {len(df)} rows → {path}")

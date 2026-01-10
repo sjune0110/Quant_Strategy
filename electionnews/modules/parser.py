@@ -150,7 +150,7 @@ def _build_name_aliases(raw_name: str) -> list[str]:
 
 
 COMPANY_ALIASES = load_company_aliases()
-# 블랙리스트 심볼 제거
+# Remove blacklisted symbols
 BLACKLIST = {"MTCH", "NDAQ", "ROOT", "POST", "TISI"}
 for sym in list(COMPANY_ALIASES.keys()):
     if sym in BLACKLIST:
@@ -159,7 +159,7 @@ for sym in list(COMPANY_ALIASES.keys()):
 
 def extract_tickers(text: str):
     """
-    회사명(alias) 포함 여부만으로 집계. 느슨한 포함 검사 사용.
+    Count matches based on company name aliases only, using a relaxed containment check.
     """
     if not isinstance(text, str):
         return None

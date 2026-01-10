@@ -1,7 +1,7 @@
 import pandas as pd
 
 def summarize_sentiment(df):
-    """후보자별 종목 언급 빈도 요약"""
+    """Summarize ticker mentions by candidate and sentiment."""
     summary_rows = []
 
     for cand in df["candidate"].unique():
