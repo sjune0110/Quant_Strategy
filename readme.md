@@ -1,6 +1,6 @@
 # Election Market Project
 
-Independent project by Seugjoon Oh.
+Independent project by Seugjoon Oh(osjun11@gmail.com).
 
 This work is inspired by the paper:
 "Stock Market Volatility around National Elections" (Bialkowski, Gottschalk, Wisniewski, 2006; p22006.pdf),

@@ -13,13 +13,14 @@ Pull election-related articles with the GDELT Doc API, find companies/tickers th
    - Optional filters: `domain_whitelist` (`site:domain`), `source_lang`, `source_country`, `maxrecords` (Doc API cap is 250/query).
 2. Activate your venv and run:
    ```bash
-   source ../pe-env/bin/activate  # adjust if your env path differs
+   source ../pe-env-312/bin/activate  # adjust if your env path differs
    python run.py
    ```
 
 ## YAML config notes
 - All runtime settings are read from `config/settings.yaml`.
 - The Doc API request is built from the YAML fields under `doc_api` and the candidate list in `candidates`.
+- By adjusting the time window and keywords, this can be used independently to find stocks associated with any person or topic, not just presidential elections.
 
 ## What the pipeline does
 - Uses the GDELT Doc API for all article retrieval.
